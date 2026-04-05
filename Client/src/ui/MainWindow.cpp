@@ -42,6 +42,7 @@ void MainWindow::onDisconnectClicked() {
 
 void MainWindow::onNetworkConnected() {
     disconnectButton->setEnabled(true);
+    remoteVideoLabel->setText("З'єднання встановлено! Очікування відео...");
 }
 
 void MainWindow::onNetworkDisconnected() {
@@ -75,10 +76,10 @@ void MainWindow::setupUi(){
     localVideoLabel->setAlignment(Qt::AlignCenter);
 
     connectButton = new QPushButton("Підключитися", this);
-    disconnectButton = new QPushButton("Відключитися". this);
+    disconnectButton = new QPushButton("Відключитися", this);
     disconnectButton->setEnabled(false);
 
-    QHBoxLayput *buttonLayout = new QHBoxLayout();
+    QHBoxLayout *buttonLayout = new QHBoxLayout();
     buttonLayout->addWidget(connectButton);
     buttonLayout->addWidget(disconnectButton);
 
@@ -87,9 +88,9 @@ void MainWindow::setupUi(){
     bottomLayout->addStretch();
     bottomLayout->addLayout(buttonLayout);
 
-    QVBoxLayout *mainLayout = new QVBoxLayout(cantralWidget);
+    QVBoxLayout *mainLayout = new QVBoxLayout(centralWidget);
     mainLayout->addWidget(remoteVideoLabel);
-    mainLayout->addLayput(bottomLayout);
+    mainLayout->addLayout(bottomLayout);
 
     setWindowTitle("QT-Video-chat");
     resize(800, 600);

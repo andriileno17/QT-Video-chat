@@ -8,7 +8,7 @@ int main(int argc, char *argv[]) {
     qDebug() << "Запуск Qt-Video-chat Сервера...";
 
     Server server;
-    server.start(12345);
+    server.start(12345, 12346);
 
     return a.exec();
 }

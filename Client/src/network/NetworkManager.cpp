@@ -13,7 +13,11 @@ NetworkManager::NetworkManager(QObject *parent): QObject(parent){
 void NetworkManager::connectToServer(const QString &host, quint16 tcpPort, quint16 udpPort){
     serverHost = host;
     serverUdpPort = udpPort;
-    tcpPort->connectToHost(host, tcpPort);
+    tcpSocket->connectToHost(host, tcpPort);
+}
+
+void NetworkManager::disconnectFromServer() {
+    tcpSocket->disconnectFromHost();
 }
 
 void NetworkManager::sendVideoFrame(const QImage &image){
@@ -24,11 +28,23 @@ void NetworkManager::sendVideoFrame(const QImage &image){
     buffer.open(QIODevice::WriteOnly);
     image.save(&buffer, "JPEG", 60);
 
-    udpSocket->writeDatagrams(ba, QHostAdress(serverHost), serverUdpPort);
+    udpSocket->writeDatagram(ba, QHostAddress(serverHost), serverUdpPort);
 }
 
-void NetworkManager::onTcpConnected(){
-    udpSocket->bind(QHostAdress::AnyIPv4, 0);
+// void NetworkManager::onTcpConnected(){
+//     udpSocket->bind(QHostAddress::AnyIPv4, 0);
+//     emit connected();
+// }
+
+void NetworkManager::onTcpConnected() {
+    udpSocket->bind(QHostAddress::AnyIPv4, 0); 
+    
+    // --- ДОДАЄМО ЦІ ДВА РЯДКИ ---
+    // Відправляємо фейковий пакет, щоб сервер "побачив" наш UDP-порт
+    QByteArray dummy = "PING";
+    udpSocket->writeDatagram(dummy, QHostAddress(serverHost), serverUdpPort);
+    // ----------------------------
+    
     emit connected();
 }
 

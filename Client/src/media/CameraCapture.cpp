@@ -9,7 +9,7 @@ CameraCapture::CameraCapture(QObject *parent)
     captureSession.setCamera(camera);
     captureSession.setVideoSink(videoSink);
 
-    connect(videoSink, &QVideo::videoFrameChanged, this, &CameraCapture::processFrame);
+    connect(videoSink, &QVideoSink::videoFrameChanged, this, &CameraCapture::processFrame);
 }
 
 void CameraCapture::start(){

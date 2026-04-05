@@ -17,7 +17,7 @@ class CameraCapture: public QObject{
         void stop();
 
     signals:
-        void frameCapture(const QImage &image);
+        void frameCaptured(const QImage &image);
 
     private slots:
         void processFrame(const QVideoFrame &frame);

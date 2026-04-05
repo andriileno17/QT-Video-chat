@@ -20,7 +20,7 @@ class NetworkManager: public QObject{
     signals:
         void connected();
         void disconnected();
-        void remoteFrameRecieved(const QImage &image);
+        void remoteFrameReceived(const QImage &image);
 
     private slots:
         void onTcpConnected();
