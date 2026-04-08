@@ -9,13 +9,15 @@ set(CLIENT_SOURCES
     src/main.cpp
     src/ui/MainWindow.cpp
     src/network/NetworkManager.cpp
-    src/media/CameraCapture.cpp
+    src/media/Camera/CameraCapture.cpp
+    src/media/Audio/AudioController.cpp
 )
 
 set(CLIENT_HEADERS
     src/ui/MainWindow.h
     src/network/NetworkManager.h
-    src/media/CameraCapture.h
+    src/media/Camera/CameraCapture.h
+    src/media/Audio/AudioController.h
 )
 
 add_executable(${PROJECT_NAME} ${CLIENT_SOURCES} ${CLIENT_HEADERS})
@@ -24,7 +26,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${CMAKE_CURRENT_SOURCE_DIR}/src/ui
     ${CMAKE_CURRENT_SOURCE_DIR}/src/network
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/media
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/media/Camera
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/media/Audio
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE 
