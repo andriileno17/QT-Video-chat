@@ -28,23 +28,28 @@ void NetworkManager::sendVideoFrame(const QImage &image){
     buffer.open(QIODevice::WriteOnly);
     image.save(&buffer, "JPEG", 60);
 
+    ba.append('V');
     udpSocket->writeDatagram(ba, QHostAddress(serverHost), serverUdpPort);
 }
 
-// void NetworkManager::onTcpConnected(){
-//     udpSocket->bind(QHostAddress::AnyIPv4, 0);
-//     emit connected();
-// }
+void NetworkManager::sendAudioData(const QByteArray &data){
+    if (tcpSocket->state() != QAbstractSocket::ConnectedState) return;
+
+    QByteArray packet;
+    packet.append('A');
+    packet.append(data);
+    
+    udpSocket->writeDatagram(packet, QHostAddress(serverHost), serverUdpPort);
+}
 
 void NetworkManager::onTcpConnected() {
     udpSocket->bind(QHostAddress::AnyIPv4, 0); 
     
-    // --- ДОДАЄМО ЦІ ДВА РЯДКИ ---
-    // Відправляємо фейковий пакет, щоб сервер "побачив" наш UDP-порт
-    QByteArray dummy = "PING";
+    QByteArray dummy;
+    dummy.append('P'); 
+    dummy.append("ING");
     udpSocket->writeDatagram(dummy, QHostAddress(serverHost), serverUdpPort);
-    // ----------------------------
-    
+
     emit connected();
 }
 
@@ -59,9 +64,19 @@ void NetworkManager::readUdpDatagrams() {
         datagram.resize(int(udpSocket->pendingDatagramSize()));
         udpSocket->readDatagram(datagram.data(), datagram.size());
 
-        QImage image;
-        if (image.loadFromData(datagram, "JPEG")) {
-            emit remoteFrameReceived(image);
+        if(datagram.isEmpty()) continue;
+
+        char packetType = datagram.at(0);
+
+        datagram.remove(0, 1);
+
+        if(packetType == 'V'){
+            QImage image;
+            if(image.loadFromData(datagram, "JPEG")){
+                emit remoteFrameReceived(image);
+            }
+        } else if (packetType == 'A'){
+            emit remoteAudioReceived(datagram);
         }
     }
 }

@@ -6,6 +6,7 @@
 #include <QPushButton>
 #include "CameraCapture.h"
 #include "NetworkManager.h"
+#include "AudioController.h"
 
 class MainWindow: public QMainWindow{
     Q_OBJECT
@@ -34,6 +35,7 @@ class MainWindow: public QMainWindow{
 
         CameraCapture *cameraCapture;
         NetworkManager *networkManager;
+        AudioController *audioController;
 };
 
 #endif

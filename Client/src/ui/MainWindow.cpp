@@ -11,6 +11,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     cameraCapture = new CameraCapture(this);
     networkManager = new NetworkManager(this);
+    audioController = new AudioController(this);
 
     connect(connectButton, &QPushButton::clicked, this, &MainWindow::onConnectClicked);
     connect(disconnectButton, &QPushButton::clicked, this, &MainWindow::onDisconnectClicked);
@@ -24,11 +25,17 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(networkManager, &NetworkManager::remoteFrameReceived, this, &MainWindow::updateRemoteVideo);
 
+    connect(audioController, &AudioController::audioDataCaptured, networkManager, &NetworkManager::sendAudioData);
+
+    connect(networkManager, &NetworkManager::remoteAudioReceived, audioController, &AudioController::playAudioData);
+
     cameraCapture->start();
+    audioController->start();
 }
 
 MainWindow::~MainWindow(){
     cameraCapture->stop();
+    audioController->stop();
 }
 
 void MainWindow::onConnectClicked() {

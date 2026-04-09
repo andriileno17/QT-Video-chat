@@ -16,11 +16,13 @@ class NetworkManager: public QObject{
 
     public slots:
         void sendVideoFrame(const QImage &image);
+        void sendAudioData(const QByteArray &data);
 
     signals:
         void connected();
         void disconnected();
         void remoteFrameReceived(const QImage &image);
+        void remoteAudioReceived(const QByteArray &data);
 
     private slots:
         void onTcpConnected();
